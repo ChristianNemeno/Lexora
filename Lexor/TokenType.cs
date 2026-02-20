@@ -1,60 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexor
 {
     internal enum TokenType
     {
-        // Parenthesis (, )
-        LEFT_PAREN,
-        RIGHT_PAREN,
-        // * , / , %
-        STAR, SLASH, MOD,
-        // +, -
-        PLUS, MINUS,
-        // > , < , <=, >= , ==, <>
-        GREATER, LESS,
-        GREATER_EQUAL, LESS_EQUAL,
-        DOUBLE_EQUAL, NOT_EQUAL,
+        // Parenthesis
+        LeftParen,
+        RightParen,
 
-        // =    
-        EQUAL,
+        // Arithmetic
+        Star,
+        Slash,
+        Mod,
+        Plus,
+        Minus,
 
+        // Comparison
+        Greater,
+        Less,
+        GreaterEqual,
+        LessEqual,
+        DoubleEqual,
+        NotEqual,
 
-        // logical ops
-        AND, OR, NOT, TRUE, FALSE,
+        // Assignment / equality
+        Assign,     // single '='
 
-        //.
-        DOT,
+        // Logical
+        And,
+        Or,
+        Not,
+        True,
+        False,
 
-        // data types
-        INT, CHAR, BOOL, FLOAT,
+        // Punctuation
+        Dot,
 
-        // literals
-        IDENTIFIER, CHAR_LITERAL, STRING_LITERAL, INT_LITERAL, FLOAT_LITERAL,
+        // Data types / keywords
+        Int,
+        Char,
+        Bool,
+        Float,
 
-        //symbols
-        COMMA, AMPERSAND, DOLLAR,
+        // Literals & identifiers, the actual value 
+        Identifier,
+        CharLiteral,
+        StringLiteral,
+        IntLiteral,
+        FloatLiteral,
 
-        // reserved keywords
-        SCRIPT_AREA, START_SCRIPT, END_SCRIPT,
-        DECLARE,
+        // Symbols
+        Comma,
+        Ampersand,
+        Dollar,
 
-        // the '=' button
-        ASSIGN,
+        // Reserved / script markers
+        ScriptArea,
+        StartScript,
+        EndScript,
+        Declare,
 
-        // control flow
-        IF, START_IF, END_IF,
-        ELSE, ELSE_IF,
+        // Control flow
+        If,
+        StartIf,
+        EndIf,
+        Else,
+        ElseIf,
 
-        //loop
-        FOR, START_FOR, END_FOR,
-        REPEAT_WHEN, START_REPEAT, END_REPEAT,
+        // Loops
+        For,
+        StartFor,
+        EndFor,
+        RepeatWhen,
+        StartRepeat,
+        EndRepeat,
 
-
-        EOF,
+        Eof,
     }
 }
