@@ -111,7 +111,10 @@ internal class Lexer
                 break;
 
             default:
-                
+                if (IsDigit(ch))
+                {
+
+                }
 
 
 
@@ -136,7 +139,32 @@ internal class Lexer
         AddToken(type);
         
     }
+    private void Number()
+    {
+        bool isFloat = false;
 
+
+        while(IsDigit(Peek()))
+        {
+            Advance();
+        }
+
+        if(Peek() == '.' && IsDigit(PeekNext()))
+        {
+            isFloat = true;
+            Advance(); // because we want to ignore the '.' else bottom code would early exit
+            while (IsDigit(Peek()))
+            {
+                Advance();
+            }
+        }
+
+        if (isFloat)
+            AddToken(TokenType.FloatLiteral);
+        else
+            AddToken(TokenType.IntLiteral);
+
+    }
 
 
     private bool IsDigit(char ch)
