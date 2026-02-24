@@ -20,6 +20,7 @@ namespace Lexor
             R VisitVariableExpr(Variable expr);
         }
 
+        public abstract R Accept<R>(IVisitor<R> visitor);
         public class Assign : Expr
         {
             public readonly Token Name;
@@ -119,7 +120,7 @@ namespace Lexor
             }
         }
 
-        public abstract R Accept<R>(IVisitor<R> visitor);
+        
     }
 
 
