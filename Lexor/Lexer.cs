@@ -18,35 +18,35 @@ internal class Lexer
     {
         Keywords = new Dictionary<string, TokenType>(StringComparer.Ordinal)
         {
-            // Script markers
-            ["SCRIPT AREA"] = TokenType.ScriptArea,
-            ["START SCRIPT"] = TokenType.StartScript,
-            ["END SCRIPT"] = TokenType.EndScript,
-
-            // Declaration
+            // Keywords
+            ["SCRIPT"] = TokenType.Script,
+            ["AREA"] = TokenType.Area,
+            ["START"] = TokenType.Start,
+            ["END"] = TokenType.End,
             ["DECLARE"] = TokenType.Declare,
+            ["PRINT"] = TokenType.Print,
+            ["SCAN"] = TokenType.Scan,
 
-            // Control flow
+
+            // Loops , Controlflow
             ["IF"] = TokenType.If,
-            ["START IF"] = TokenType.StartIf,
-            ["END IF"] = TokenType.EndIf,
             ["ELSE"] = TokenType.Else,
-            ["ELSE IF"] = TokenType.ElseIf,
-
-            // Loops
             ["FOR"] = TokenType.For,
-            ["START FOR"] = TokenType.StartFor,
-            ["END FOR"] = TokenType.EndFor,
-            ["REPEAT WHEN"] = TokenType.RepeatWhen,
-            ["START REPEAT"] = TokenType.StartRepeat,
-            ["END REPEAT"] = TokenType.EndRepeat,
-            // Data types
+            ["REPEAT"] = TokenType.Repeat,
+            ["WHEN"] = TokenType.When,
 
+            // Data types
             ["INT"] = TokenType.Int,
             ["CHAR"] = TokenType.Char,
             ["BOOL"] = TokenType.Bool,
             ["FLOAT"] = TokenType.Float,
 
+            //Logic
+            ["TRUE"] = TokenType.True,
+            ["FALSE"] = TokenType.False,
+            ["AND"] = TokenType.And,
+            ["OR"] = TokenType.Or,
+            ["NOT"] = TokenType.Not,
 
         };
     }
@@ -86,18 +86,25 @@ internal class Lexer
             case '+': AddToken(TokenType.Plus);       break;
             case '*': AddToken(TokenType.Star);       break;
             case '/': AddToken(TokenType.Slash);      break;
+            case ':': AddToken(TokenType.Colon);      break;
+            case '&': AddToken(TokenType.Ampersand);  break;
 
             case '=': AddToken(Match('=') ? TokenType.DoubleEqual : TokenType.Assign); break;
             case '<': AddToken(Match('=') ? TokenType.LessEqual    : Match('>') ? TokenType.NotEqual : TokenType.Less);    break;
             case '>': AddToken(Match('=') ? TokenType.GreaterEqual : TokenType.Greater); break;
-            case '$': AddToken(TokenType.Dollar); break; 
+            case '$': AddToken(TokenType.Dollar); break;
 
+            case '[': AddToken(TokenType.LeftBracket); break;
+            case ']': AddToken(TokenType.RightBracket); break;
             // Whitespace — ignore
             case ' ':
             case '\r':
             case '\t':
                 break;
 
+
+            case '\'': CharLiteral(); break;
+            case '"': StringLiteral(); break;
             case '\n':
                 _line++;
                 break;
@@ -113,18 +120,71 @@ internal class Lexer
             default:
                 if (IsDigit(ch))
                 {
+                    Number();
+                }else if (IsAlpha(ch))
+                {
 
+                    Identifier();
                 }
-
-
-
+                else
+                {
+                    // error here
+                    Lexora.Error(_line, "Unexpected character");
+                }
                 break;
         }
+    }
+    private void CharLiteral()
+    {
+        if (IsAtEnd() || PeekNext() != '\'')
+        {
+            // its things like this '' , Im not sure if thats invalid or not 
+            Lexora.Error(_line, "Invalid char literal");
+            return;
+        }
+        char value = Advance();
+        Advance();
+        AddToken(TokenType.CharLiteral, value);
+
+    }
+    private void StringLiteral()
+    {
+        while (Peek() != '"' && !IsAtEnd()) {
+
+            if (Peek() == '\n') _line++;
+            Advance();
+        }
+
+        if (IsAtEnd())
+        {
+            Lexora.Error(_line, "Unterminated String");
+            return ;
+        }
+
+        Advance(); // consume   
+
+        string value = _source.Substring(_start + 1, _current - _start - 2);
+
+        if( value == "TRUE")
+        {
+            AddToken(TokenType.BoolLiteral, true);
+        }
+        else if( value == "FALSE")
+        {
+            AddToken(TokenType.BoolLiteral, false);
+        }
+        else
+        {
+            AddToken(TokenType.StringLiteral, value);
+        }
+
+
+
     }
 
     private void Identifier()
     {
-        while (IsAlphaNumeric(Peek()))){
+        while (IsAlphaNumeric(Peek())){
             Advance();
         }
 
@@ -159,10 +219,12 @@ internal class Lexer
             }
         }
 
+        string value = _source.Substring(_start, _current - _start);
+
         if (isFloat)
-            AddToken(TokenType.FloatLiteral);
+            AddToken(TokenType.FloatLiteral, float.Parse(value));
         else
-            AddToken(TokenType.IntLiteral);
+            AddToken(TokenType.IntLiteral, int.Parse(value));
 
     }
 
@@ -195,10 +257,10 @@ internal class Lexer
     }
 
 
-    /// <summary>Consumes and returns the current character.</summary>
+    //Consumes and returns the current character.
     private char Advance() => _source[_current++];
 
-    /// <summary>Returns true if the current character matches <paramref name="expected"/> and advances.</summary>
+    // Returns true if the current character matches and advances
     private bool Match(char expected)
     {
         if (IsAtEnd()) return false;
@@ -207,12 +269,12 @@ internal class Lexer
         return true;
     }
 
-    /// <summary>Peeks at the current character without consuming it.</summary>
+    // Peeks at the current character without consuming it
     private char Peek() => IsAtEnd() ? '\0' : _source[_current];
 
-    /// <summary>Peeks at the next character without consuming it.</summary>
+    // Peeks at the next character without consuming it
     private char PeekNext() => _current + 1 >= _source.Length ? '\0' : _source[_current + 1];
 
-    /// <summary>Returns true when all source characters have been consumed.</summary>
+    // Returns true when all source characters have been consumed
     public bool IsAtEnd() => _current >= _source.Length;
 }

@@ -1,12 +1,12 @@
-﻿using System;
-
-namespace Lexor
+﻿namespace Lexor
 {
     internal enum TokenType
     {
-        // Parenthesis
+        // Parenthesis & Brackets
         LeftParen,
         RightParen,
+        LeftBracket,
+        RightBracket,
 
         // Arithmetic
         Star,
@@ -23,58 +23,51 @@ namespace Lexor
         DoubleEqual,
         NotEqual,
 
-        // Assignment / equality
-        Assign,     // single '='
+        // Assignment
+        Assign,
 
         // Logical
         And,
         Or,
         Not,
-        True,
-        False,
 
-        // Punctuation
+        // Punctuation & Symbols
         Dot,
+        Comma,
+        Colon,
+        Ampersand,
+        Dollar,
 
-        // Data types / keywords
+        // Data types 
         Int,
         Char,
         Bool,
         Float,
 
-        // Literals & identifiers, the actual value 
+        // Literals & Identifiers
         Identifier,
         CharLiteral,
         StringLiteral,
         IntLiteral,
         FloatLiteral,
+        BoolLiteral,
 
-        // Symbols
-        Comma,
-        Ampersand,
-        Dollar,
-
-        // Reserved / script markers
-        ScriptArea,
-        StartScript,
-        EndScript,
+        // Keywords (Strictly Single Words)
+        Script,
+        Area,
+        Start,
+        End,
         Declare,
-
-        // Control flow
+        Print,
+        Scan,
         If,
-        StartIf,
-        EndIf,
         Else,
-        ElseIf,
-
-        // Loops
         For,
-        StartFor,
-        EndFor,
-        RepeatWhen,
-        StartRepeat,
-        EndRepeat,
+        Repeat,
+        When,
+        True,
+        False,
 
-        Eof,
+        Eof
     }
 }
