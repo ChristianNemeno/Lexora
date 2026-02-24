@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using System.Threading.Tasks;
-using static Lexor.Expr;
+
 
 namespace Lexor
 {
@@ -106,7 +103,7 @@ namespace Lexor
         {
             public readonly Expr Condition;
             public readonly Stmt ThenBranch;
-            public readonly Stmt ElseBranch;
+            public readonly Stmt? ElseBranch;
 
             public If(Expr condition, Stmt thenBranch, Stmt elseBranch)
             {
@@ -128,7 +125,7 @@ namespace Lexor
 
             public readonly Stmt Body;
 
-            public For(Stmt initialization, Expr? condition, Expr update, Stmt body)
+            public For(Stmt? initialization, Expr? condition, Expr? update, Stmt body)
             {
                 Initialization = initialization;
                 Condition = condition;
