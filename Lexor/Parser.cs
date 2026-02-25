@@ -23,7 +23,57 @@ namespace Lexor
 
 
 
+        // highest point , its like the entry points , the starting of the tokens,
+        // we tokenized 
 
+        public List<Stmt> Parse()
+        {
+            List<Stmt> statements= new List<Stmt>();
+
+            try
+            {
+                // So we have tokens , consume is like , i take the current token
+                // and then i see if it satisfies the requirements, really helpful
+                // in closing the blocks 
+                // <Declarations> -> <Declaration> <Declarations> | ε
+                Consume(TokenType.Script, "Expect 'SCRIPT' at the beginning.");
+                Consume(TokenType.Area, "Expect 'AREA' after 'SCRIPT'.");
+
+                Consume(TokenType.Start, "Expect 'SCRIPT' at the beginning.");
+                Consume(TokenType.Script, "Expect 'AREA' after 'SCRIPT'.");
+
+                // declarations must be at top
+                while (Match(TokenType.Declare))
+                {
+                    statements.Add(ParseDeclaration());
+                }
+
+                return statements;
+            }
+            catch (ParseError) {
+                return null;
+            }
+        }
+        public Stmt ParseDeclaration()
+        {
+            Token dataType;
+            if(Match(TokenType.Int, TokenType.Float, TokenType.Char, TokenType.Bool))
+            {
+                dataType = Previous();
+            }
+            else
+            {
+                // so example , before we enter ParseDeclaration, 
+                // code is like `DECLARE INT varname = 100`
+                // we consumed declare then next is INT we 
+                // enter this block if the token is not any of the match
+                throw Error(Peek(), "Expect data type (INT, CHAR, BOOL, FLOAT).");
+            }
+
+            throw new NotImplementedException();
+            // i am sleepy will cont tommrowo
+
+        }
 
 
 
@@ -31,6 +81,8 @@ namespace Lexor
 
 
         // helpers
+
+        // Current token gets ,DOES NOT MOVE
         private Token Peek()
         {
             return tokens[current];
@@ -39,6 +91,9 @@ namespace Lexor
         {
             return Peek().Type == TokenType.Eof;
         }
+
+        // Checks the current token in tokens , and tries to see if equal to type
+        // Does not MOVE
         private bool Check(TokenType type)
         {
             if(IsAtEnd()) return false;
@@ -50,12 +105,15 @@ namespace Lexor
         {
             return tokens[current - 1];
         }
-
+        // This MOVES
         private Token Advance()
         {
             if (!IsAtEnd()) current++;
             return Previous();
         }
+
+
+        // Checks AND Moves! if Check fails , an error
         private Token Consume(TokenType type, string message)
         {
             if (Check(type))
@@ -70,6 +128,8 @@ namespace Lexor
             Lexora.Error(token, message);
             return new ParseError();
         }
+        // its like an OR as long as the current matches any of the params
+        // checks if and moves then exits the program, so likely use previous
         private bool Match(params TokenType[] types)
         {
             foreach (TokenType t in types)
