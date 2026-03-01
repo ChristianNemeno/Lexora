@@ -52,7 +52,7 @@
         FloatLiteral,
         BoolLiteral,
 
-        // Keywords (Strictly Single Words)
+        // Keywords 
         Script,
         Area,
         Start,

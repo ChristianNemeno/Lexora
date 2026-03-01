@@ -21,8 +21,6 @@ namespace Lexor
 
 
 
-
-
         // highest point , its like the entry points , the starting of the tokens,
         // we tokenized 
 
@@ -39,14 +37,21 @@ namespace Lexor
                 Consume(TokenType.Script, "Expect 'SCRIPT' at the beginning.");
                 Consume(TokenType.Area, "Expect 'AREA' after 'SCRIPT'.");
 
-                Consume(TokenType.Start, "Expect 'SCRIPT' at the beginning.");
-                Consume(TokenType.Script, "Expect 'AREA' after 'SCRIPT'.");
+                Consume(TokenType.Start, "Expect 'START' before 'SCRIPT'."); 
+                Consume(TokenType.Script, "Expect 'SCRIPT' after 'START'."); 
 
                 // declarations must be at top
                 while (Match(TokenType.Declare))
                 {
                     statements.Add(ParseDeclaration());
                 }
+                while (!Check(TokenType.End) && !IsAtEnd())
+                {
+                    statements.Add(Statement());
+                }
+
+                Consume(TokenType.End, "Expect 'END' after executable statements.");
+                Consume(TokenType.Script, "Expect 'SCRIPT' after 'END'.");
 
                 return statements;
             }
@@ -88,11 +93,47 @@ namespace Lexor
 
 
             } while (Match(TokenType.Comma));
+
+
+            return new Stmt.Declare(dataType, variables);
             
-            // after declarations we can procced with other statements but i will implement Expression first  
-            
-            throw new NotImplementedException();
-            
+        }
+
+        private Stmt Statement()
+        {
+            // second entry , parse starts in declare cause of rules 
+            // parse -> declarations -> statements
+            // statements are like , (print, scan, if ,for, rep when, aside from variable declaration)
+            if (Match(TokenType.Print)) { return PrintStatement(); }
+            if(Match(TokenType.Scan)) { return ScanStatement(); }
+
+            // we can add the others but im interested in trying if expression works as expected , later na wwww
+            return ExpressionStatement();
+        }
+
+        private Stmt PrintStatement()
+        {
+            Consume(TokenType.Colon, "Expect ':' after PRINT");
+            Expr value = Expression();
+            return new Stmt.Print(value);
+        }
+        private Stmt ScanStatement()
+        {
+            Consume(TokenType.Colon, "Expect a colon after PRINT");
+            List<Token> variables = new List<Token>();
+
+            do
+            {
+                variables.Add(Consume(TokenType.Identifier, "Expect variable name in SCAN."));
+            }while(Match(TokenType.Comma));
+
+            return new Stmt.Scan(variables);
+        }
+
+        private Stmt ExpressionStatement()
+        {
+            Expr value = Expression();
+            return new Stmt.Expression(value);
         }
 
 
@@ -109,7 +150,7 @@ namespace Lexor
         {
             Expr expr = LogicalOr(); // ypu can see why this is sa later recursion tree
 
-            if (Match(TokenType.Assign){
+            if (Match(TokenType.Assign)){
                 Token equals = Previous();
                 Expr value = Assignment();
 
@@ -150,25 +191,37 @@ namespace Lexor
 
         private Expr Equality()
         {
-            Expr expr = ParseComparison();
+            Expr expr = Concatenation();
 
             while (Match(TokenType.NotEqual, TokenType.DoubleEqual))
             {
                 Token op = Previous();
-                Expr right = ParseComparison();
+                Expr right = Concatenation();
                 expr = new Expr.Binary(expr, op, right);
             }
             return expr;
         }
 
+        private Expr Concatenation()
+        {
+            Expr expr = Comparison();   
+
+            while (Match(TokenType.Ampersand))
+            {
+                Token op = Previous();
+                Expr right = Comparison();
+                expr = new Expr.Binary(expr, op, right);
+            }
+            return expr;
+        }
         private Expr Comparison()
         {
-            Expr expr = ParseTerm();
+            Expr expr = Term();
 
             while (Match(TokenType.Greater, TokenType.GreaterEqual, TokenType.Less, TokenType.LessEqual))
             {
                 Token op = Previous();
-                Expr right = ParseTerm();
+                Expr right = Term();
                 expr = new Expr.Binary(expr, op, right);
             }
             return expr;
@@ -176,12 +229,12 @@ namespace Lexor
 
         private Expr Term()
         {
-            Expr expr = ParseFactor();
+            Expr expr = Factor();
 
             while (Match(TokenType.Minus, TokenType.Plus))
             {
                 Token op = Previous();
-                Expr right = ParseFactor();
+                Expr right = Factor();
                 expr = new Expr.Binary(expr, op, right);
             }
             return expr;
@@ -189,12 +242,12 @@ namespace Lexor
 
         private Expr Factor()
         {
-            Expr expr = ParseUnary();
+            Expr expr = Unary();
 
             while (Match(TokenType.Slash, TokenType.Star, TokenType.Mod))
             {
                 Token op = Previous();
-                Expr right = ParseUnary();
+                Expr right = Unary();
                 expr = new Expr.Binary(expr, op, right);
             }
             return expr;
@@ -205,10 +258,10 @@ namespace Lexor
             if (Match(TokenType.Not, TokenType.Minus, TokenType.Plus))
             {
                 Token op = Previous();
-                Expr right = ParseUnary();
+                Expr right = Unary();
                 return new Expr.Unary(op, right);
             }
-            return ParsePrimary();
+            return Primary();
         }
 
         private Expr Primary()
@@ -287,7 +340,7 @@ namespace Lexor
         }
 
 
-        // Checks AND Moves! if Check fails , an error
+        // Checks AND Moves! if Check fails , an error NO MOVE
         private Token Consume(TokenType type, string message)
         {
             if (Check(type))
@@ -302,8 +355,10 @@ namespace Lexor
             Lexora.Error(token, message);
             return new ParseError();
         }
+        
         // its like an OR as long as the current matches any of the params
         // checks if and moves then exits the program, so likely use previous
+        // Moves only if it matches 
         private bool Match(params TokenType[] types)
         {
             foreach (TokenType t in types)
