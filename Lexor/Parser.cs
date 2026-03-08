@@ -178,12 +178,12 @@ namespace Lexor
 
         private Expr LogicalAnd()
         {
-            Expr expr = ParseEquality();
+            Expr expr = Equality();
 
             while (Match(TokenType.And))
             {
                 Token op = Previous();
-                Expr right = ParseEquality();
+                Expr right = Equality();
                 expr = new Expr.Binary(expr, op, right);
             }
             return expr;

@@ -16,8 +16,8 @@ internal static class Lexora
         string source = File.ReadAllText(path, Encoding.Default);
         Run(source);
 
-        if (HadError) Environment.Exit(65);
-        if (HadRuntimeError) Environment.Exit(70);
+        if (HadError) System.Environment.Exit(65);
+        if (HadRuntimeError) System.Environment.Exit(70);
     }
 
     public static void RunPrompt()
