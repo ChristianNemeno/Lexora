@@ -20,17 +20,11 @@ internal static class Lexora
         if (HadRuntimeError) System.Environment.Exit(70);
     }
 
-    public static void RunPrompt()
+    public static void RunPrompt(string source)
     {
-        while (true)
-        {
-            Console.Write("> ");
-            string? line = Console.ReadLine();
-            if (line == null) break;
-
-            Run(line);
-            HadError = false; // reset per-line so REPL keeps going
-        }
+        Run(source);
+        HadError = false;
+        HadRuntimeError = false;
     }
 
 
@@ -38,18 +32,14 @@ internal static class Lexora
     {
         Lexer lexer = new(source);
         List<Token> tokens = lexer.ScanTokens();
+        if (HadError) return;
 
-        // TODO: add Parser and Interpreter calls here later
-        // Parser parser = new(tokens);
-        // List<Stmt> statements = parser.Parse();
-        // if (HadError) return;
-        // interpreter.Interpret(statements);
+        Parser parser = new(tokens);
+        List<Stmt> statements = parser.Parse();
+        if (HadError) return;
 
-        // non ai comment yes follow lng sa itaas , if u reading this , let me know if its done ! 
-
-        // Temporary: print tokens to verify lexer output
-        foreach (Token token in tokens)
-            Console.WriteLine(token);
+        Interpreter interpreter = new();
+        interpreter.Interpret(statements);
     }
 
 

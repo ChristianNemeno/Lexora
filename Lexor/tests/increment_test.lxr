@@ -1,0 +1,11 @@
+SCRIPT AREA
+START SCRIPT
+DECLARE INT counter = 0
+
+counter = counter + 1
+PRINT: "After 1st increment: " & counter
+counter = counter + 1
+PRINT: "After 2nd increment: " & counter
+counter = counter + 1
+PRINT: "After 3rd increment: " & counter
+END SCRIPT

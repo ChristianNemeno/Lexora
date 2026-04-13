@@ -1,110 +1,166 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Lexor;
 
+// `args` is the implicit top-level parameter in C# 9+ top-level programs
 
-int passed = 0;
-int failed = 0;
-
-void Test(string name, string source, string expected)
+if (args.Length == 0)
 {
-    var output = new StringWriter();
-    Console.SetOut(output);
-
-    Lexora.HadError = false;
-    Lexora.HadRuntimeError = false;
-
-    var lexer = new Lexer(source);
-    List<Token> tokens = lexer.ScanTokens();
-
-    if (!Lexora.HadError)
+    RunRepl();
+}
+else if (args.Length == 1 && args[0] == "--test")
+{
+    RunTests();
+}
+else if (args.Length == 1)
+{
+    string path = args[0];
+    if (!File.Exists(path))
     {
-        var parser = new Parser(tokens);
-        List<Stmt> statements = parser.Parse();
+        Console.Error.WriteLine($"File not found: {path}");
+        System.Environment.Exit(1);
+    }
+    Lexora.RunFile(path);
+}
+else
+{
+    Console.Error.WriteLine("Usage: lexor [script]");
+    Console.Error.WriteLine("       lexor --test");
+    System.Environment.Exit(64);
+}
 
-        if (!Lexora.HadError && statements != null)
+void RunRepl()
+{
+    Console.WriteLine("LEXOR interpreter. Ctrl+C or Ctrl+D to exit.");
+    Console.WriteLine("Enter a complete script (SCRIPT AREA / START SCRIPT ... END SCRIPT) and press Enter twice to run.\n");
+
+    while (true)
+    {
+        Console.Write(">> ");
+        var lines = new System.Text.StringBuilder();
+        string? line;
+        while ((line = Console.ReadLine()) != null)
         {
-            var interpreter = new Interpreter();
-            interpreter.Interpret(statements);
+            if (line == "" && lines.ToString().TrimEnd().EndsWith("END SCRIPT", StringComparison.OrdinalIgnoreCase))
+                break;
+            lines.AppendLine(line);
+            Console.Write(".. ");
         }
-    }
+        if (line == null) break; // EOF (Ctrl+D)
 
-    Console.SetOut(new StreamWriter(new FileStream("CONOUT$", FileMode.Open, FileAccess.Write)) { AutoFlush = true });
+        string input = lines.ToString().Trim();
+        if (input == "") continue;
 
-    string actual = output.ToString().Trim();
-    bool ok = actual == expected.Trim();
-
-    if (ok)
-    {
-        passed++;
-        Console.WriteLine($"  [PASS] {name}");
-    }
-    else
-    {
-        failed++;
-        Console.WriteLine($"  [FAIL] {name}");
-        Console.WriteLine($"         expected : {expected}");
-        Console.WriteLine($"         actual   : {actual}");
+        Lexora.HadError = false;
+        Lexora.HadRuntimeError = false;
+        Lexora.RunPrompt(input);
     }
 }
 
 
-Console.WriteLine("Running tests...\n");
+// ---------------------------------------------------------------------------
+// Tests (run with: dotnet run --project Lexor/Lexor.csproj -- --test)
+// ---------------------------------------------------------------------------
 
-Test("PRINT: 1 + 1",
-    source: """
-    SCRIPT AREA
-    START SCRIPT
-    PRINT: 1 + 1
-    END SCRIPT
-    """,
-    expected: "2"
-);
+void RunTests()
+{
+    int passed = 0;
+    int failed = 0;
 
-Test("DECLARE INT x = 10 then PRINT x",
-    source: """
-    SCRIPT AREA
-    START SCRIPT
-    DECLARE INT x = 10
-    PRINT: x
-    END SCRIPT
-    """,
-    expected: "10"
-);
+    void Test(string name, string source, string expected)
+    {
+        var output = new StringWriter();
+        Console.SetOut(output);
 
-Test("PRINT concatenation with sum",
-    source: """
-    SCRIPT AREA
-    START SCRIPT
-    DECLARE INT x = 10, y = 20
-    DECLARE INT sum
-    sum = x + y
-    PRINT: "The sum of x and y is: " & sum
-    END SCRIPT
-    """,
-    expected: "The sum of x and y is: 30"
-);
+        Lexora.HadError = false;
+        Lexora.HadRuntimeError = false;
 
-Test("PRINT string literal",
-    source: """
-    SCRIPT AREA
-    START SCRIPT
-    PRINT: "Hello, World!"
-    END SCRIPT
-    """,
-    expected: "Hello, World!"
-);
+        var lexer = new Lexer(source);
+        List<Token> tokens = lexer.ScanTokens();
 
-Test("PRINT: 3 * 4",
-    source: """
-    SCRIPT AREA
-    START SCRIPT
-    PRINT: 3 * 4
-    END SCRIPT
-    """,
-    expected: "12"
-);
+        if (!Lexora.HadError)
+        {
+            var parser = new Parser(tokens);
+            List<Stmt> statements = parser.Parse();
 
+            if (!Lexora.HadError && statements != null)
+            {
+                var interpreter = new Interpreter();
+                interpreter.Interpret(statements);
+            }
+        }
 
-Console.WriteLine($"\n{passed + failed} tests — {passed} passed, {failed} failed.");
+        Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
+
+        string actual = output.ToString().Trim();
+        bool ok = actual == expected.Trim();
+
+        if (ok) { passed++; Console.WriteLine($"  [PASS] {name}"); }
+        else
+        {
+            failed++;
+            Console.WriteLine($"  [FAIL] {name}");
+            Console.WriteLine($"         expected : {expected}");
+            Console.WriteLine($"         actual   : {actual}");
+        }
+    }
+
+    Console.WriteLine("Running tests...\n");
+
+    Test("PRINT: 1 + 1",
+        source: """
+        SCRIPT AREA
+        START SCRIPT
+        PRINT: 1 + 1
+        END SCRIPT
+        """,
+        expected: "2"
+    );
+
+    Test("DECLARE INT x = 10 then PRINT x",
+        source: """
+        SCRIPT AREA
+        START SCRIPT
+        DECLARE INT x = 10
+        PRINT: x
+        END SCRIPT
+        """,
+        expected: "10"
+    );
+
+    Test("PRINT concatenation with sum",
+        source: """
+        SCRIPT AREA
+        START SCRIPT
+        DECLARE INT x = 10, y = 20
+        DECLARE INT sum
+        sum = x + y
+        PRINT: "The sum of x and y is: " & sum
+        END SCRIPT
+        """,
+        expected: "The sum of x and y is: 30"
+    );
+
+    Test("PRINT string literal",
+        source: """
+        SCRIPT AREA
+        START SCRIPT
+        PRINT: "Hello, World!"
+        END SCRIPT
+        """,
+        expected: "Hello, World!"
+    );
+
+    Test("PRINT: 3 * 4",
+        source: """
+        SCRIPT AREA
+        START SCRIPT
+        PRINT: 3 * 4
+        END SCRIPT
+        """,
+        expected: "12"
+    );
+
+    Console.WriteLine($"\n{passed + failed} tests — {passed} passed, {failed} failed.");
+}
