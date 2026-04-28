@@ -1,0 +1,17 @@
+%% LEXOR Increment 1 Test File Corrected
+SCRIPT AREA
+START SCRIPT
+DECLARE INT numOne, numTwo=100
+DECLARE CHAR section='A'
+DECLARE BOOL isTesting="TRUE"
+
+%% Re-assigning data to a declared variable
+numOne=50
+
+%% Printing results using concatenator and newline characters
+PRINT: "--- Increment 1 Test Results ---" & $
+PRINT: "Number One: " & numOne & $
+PRINT: "Number Two: " & numTwo & $
+PRINT: "Section: " & section & $
+PRINT: "Testing Status: " & isTesting & $
+END SCRIPT
