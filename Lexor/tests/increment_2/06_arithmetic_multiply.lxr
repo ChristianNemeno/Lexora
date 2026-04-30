@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 06: Arithmetic Multiplication
+%% Tests the * operator with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a = 6
+DECLARE INT b = 7
+
+PRINT: 4 * 5
+PRINT: a * b
+PRINT: a * 10
+PRINT: 2 * a * b
+
+%% Expected Output:
+%% 20
+%% 42
+%% 60
+%% 84
+END SCRIPT

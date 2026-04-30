@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 03: Unary NOT Operator
+%% Tests the NOT logical operator on boolean literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE BOOL flag = "TRUE"
+DECLARE BOOL other = "FALSE"
+
+PRINT: NOT "TRUE"
+PRINT: NOT "FALSE"
+PRINT: NOT flag
+PRINT: NOT other
+
+%% Expected Output:
+%% FALSE
+%% TRUE
+%% FALSE
+%% TRUE
+END SCRIPT

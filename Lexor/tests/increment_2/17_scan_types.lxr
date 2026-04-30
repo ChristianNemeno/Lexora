@@ -1,0 +1,24 @@
+%% LEXOR Increment 2 - Test 17: SCAN Different Data Types
+%% Tests reading different data types (INT, FLOAT, CHAR, BOOL)
+%% Usage: echo "25,3.14,A,TRUE" | dotnet run --project Lexor/Lexor.csproj -- tests/increment_2/17_scan_types.lxr
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT num
+DECLARE FLOAT dec
+DECLARE CHAR letter
+DECLARE BOOL flag
+
+SCAN: num, dec, letter, flag
+PRINT: "INT: " & num
+PRINT: "FLOAT: " & dec
+PRINT: "CHAR: " & letter
+PRINT: "BOOL: " & flag
+
+%% Expected Input: 25,3.14,A,TRUE
+%% Expected Output:
+%% INT: 25
+%% FLOAT: 3.14
+%% CHAR: A
+%% BOOL: TRUE
+END SCRIPT

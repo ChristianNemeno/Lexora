@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 05: Arithmetic Subtraction
+%% Tests the - operator with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 50
+DECLARE INT y = 12
+
+PRINT: 20 - 8
+PRINT: x - y
+PRINT: x - 15
+PRINT: 100 - x - y
+
+%% Expected Output:
+%% 12
+%% 38
+%% 35
+%% 38
+END SCRIPT

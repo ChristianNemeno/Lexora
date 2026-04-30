@@ -1,0 +1,24 @@
+%% LEXOR Increment 2 - Test 09: Arithmetic Precedence
+%% Tests mixed arithmetic operators respecting precedence (* / % before + -)
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a = 2
+DECLARE INT b = 3
+DECLARE INT c = 4
+
+PRINT: 2 + 3 * 4
+PRINT: 10 - 6 / 2
+PRINT: 8 % 3 + 2
+PRINT: a + b * c
+PRINT: (a + b) * c
+PRINT: 20 / 4 + 3 * 2 - 5 % 3
+
+%% Expected Output:
+%% 14
+%% 7
+%% 4
+%% 14
+%% 20
+%% 9
+END SCRIPT

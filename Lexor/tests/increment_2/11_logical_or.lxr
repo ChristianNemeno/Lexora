@@ -1,0 +1,23 @@
+%% LEXOR Increment 2 - Test 11: Logical OR Operator
+%% Tests the OR operator with boolean literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE BOOL a = "TRUE"
+DECLARE BOOL b = "FALSE"
+
+PRINT: "TRUE" OR "TRUE"
+PRINT: "TRUE" OR "FALSE"
+PRINT: "FALSE" OR "TRUE"
+PRINT: "FALSE" OR "FALSE"
+PRINT: b OR "TRUE"
+PRINT: a OR b
+
+%% Expected Output:
+%% TRUE
+%% TRUE
+%% TRUE
+%% FALSE
+%% TRUE
+%% TRUE
+END SCRIPT

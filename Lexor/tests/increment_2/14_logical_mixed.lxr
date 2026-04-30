@@ -1,0 +1,24 @@
+%% LEXOR Increment 2 - Test 14: Mixed Logical Operations
+%% Tests AND, OR, and NOT combined in compound expressions
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 8
+DECLARE INT y = 3
+DECLARE BOOL flag = "TRUE"
+
+PRINT: x > 5 AND y < 5
+PRINT: x < 5 OR y < 5
+PRINT: NOT x == 8 OR y > 10
+PRINT: x > 5 AND y < 5 AND flag
+PRINT: x < 5 OR y > 10 OR flag
+PRINT: NOT (x < 5 AND y > 10)
+
+%% Expected Output:
+%% TRUE
+%% TRUE
+%% FALSE
+%% TRUE
+%% TRUE
+%% TRUE
+END SCRIPT

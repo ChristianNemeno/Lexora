@@ -1,0 +1,54 @@
+%% LEXOR Increment 2 - Test 18: Comprehensive
+%% Tests all Increment 2 features in one script: unary, arithmetic, logical, relational
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a = 5
+DECLARE INT b = 10
+DECLARE INT c = 3
+DECLARE BOOL flag = "TRUE"
+
+%% Unary operators
+PRINT: "Unary +10: " & +10
+PRINT: "Unary -a: " & -a
+PRINT: "Unary NOT TRUE: " & NOT "TRUE"
+
+%% Arithmetic
+PRINT: "Arithmetic a + b: " & a + b
+PRINT: "Arithmetic b - c: " & b - c
+PRINT: "Arithmetic a * c: " & a * c
+PRINT: "Arithmetic b / c: " & b / c
+PRINT: "Arithmetic b % c: " & b % c
+PRINT: "Precedence a + b * c: " & a + b * c
+
+%% Relational
+PRINT: "Relational a > c: " & a > c
+PRINT: "Relational a == b: " & a == b
+PRINT: "Relational a <> c: " & a <> c
+
+%% Logical
+PRINT: "Logical a > 1 AND b > 5: " & a > 1 AND b > 5
+PRINT: "Logical a > 10 OR b > 5: " & a > 10 OR b > 5
+PRINT: "Logical NOT flag: " & NOT flag
+
+%% Mixed
+PRINT: "Mixed (a + b) > c AND NOT flag: " & (a + b) > c AND NOT flag
+
+%% Expected Output:
+%% Unary +10: 10
+%% Unary -a: -5
+%% Unary NOT TRUE: FALSE
+%% Arithmetic a + b: 15
+%% Arithmetic b - c: 7
+%% Arithmetic a * c: 15
+%% Arithmetic b / c: 3
+%% Arithmetic b % c: 1
+%% Precedence a + b * c: 35
+%% Relational a > c: TRUE
+%% Relational a == b: FALSE
+%% Relational a <> c: TRUE
+%% Logical a > 1 AND b > 5: TRUE
+%% Logical a > 10 OR b > 5: TRUE
+%% Logical NOT flag: FALSE
+%% Mixed (a + b) > c AND NOT flag: FALSE
+END SCRIPT

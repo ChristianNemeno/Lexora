@@ -1,0 +1,17 @@
+%% LEXOR Increment 2 - Test 02: Unary Minus Operator
+%% Tests the unary - operator (negation) on literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a = 7
+DECLARE INT b = -4
+
+PRINT: -5
+PRINT: -a
+PRINT: -b
+
+%% Expected Output:
+%% -5
+%% -7
+%% 4
+END SCRIPT
