@@ -23,7 +23,6 @@ Driver: `Lexora.cs` (`RunFile`, `RunPrompt`). Entry point: `Program.cs`.
 
 ## Known Issues
 
-- **Duplicate `Environment` field** in `Interpreter.cs:11` and `Interpreter.cs:13`. Both are instantiated; only `environment` (lowercase, line 13) is used. The `env` field is dead code.
 - `Environment` is a single flat scope — no nested scope support yet.
 - `Lexora.cs` was previously out of sync with the pipeline (only lexing), but is now correctly wired.
 
@@ -69,6 +68,6 @@ Full grammar: `Lexor/Grammar.md`. Increment plan: `Lexor/LEXORIncrementChecks.md
 ## Conventions
 
 - All numeric values are widened to `double` at runtime
-- Type keywords (`INT`, `CHAR`, `BOOL`, `FLOAT`) are lexed but not enforced at runtime
+- Type keywords (`INT`, `CHAR`, `BOOL`, `FLOAT`) are enforced at runtime (strong typing)
 - Bool literals are `TRUE` / `FALSE` (uppercase in output via `Stringify`)
 - Error exit codes: 65 (lex/parse), 70 (runtime) — matching Crafting Interpreters

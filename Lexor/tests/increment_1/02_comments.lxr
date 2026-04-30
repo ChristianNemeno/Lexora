@@ -1,0 +1,9 @@
+%% LEXOR Increment 1 - Test 02: Comments
+%% Tests single-line comments using %%
+
+SCRIPT AREA
+START SCRIPT
+%% This is a full-line comment
+PRINT: "Comments work"  %% This is an inline comment
+%% Another full-line comment here
+END SCRIPT
