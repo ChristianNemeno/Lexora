@@ -1,0 +1,7 @@
+%% LEXOR Increment 1 - Test 01: Basic Structure
+%% Tests SCRIPT AREA, START SCRIPT, END SCRIPT keywords
+
+SCRIPT AREA
+START SCRIPT
+PRINT: "Basic structure recognized"
+END SCRIPT

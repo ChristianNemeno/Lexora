@@ -1,0 +1,12 @@
+%% LEXOR Increment 1 - Test 07: Print Display
+%% Tests PRINT statement with various expressions and newline $
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 7
+DECLARE INT y = 3
+PRINT: "--- PRINT Test ---" & $
+PRINT: "Sum: " & x + y & $
+PRINT: "Product: " & x * y & $
+PRINT: "Done"
+END SCRIPT

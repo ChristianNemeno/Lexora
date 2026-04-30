@@ -1,0 +1,14 @@
+%% LEXOR Increment 2 - Test 15: SCAN Single Variable
+%% Tests reading a single value from user input
+%% Usage: echo "42" | dotnet run --project Lexor/Lexor.csproj -- tests/increment_2/15_scan_single.lxr
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x
+SCAN: x
+PRINT: "You entered: " & x
+
+%% Expected Input: 42
+%% Expected Output:
+%% You entered: 42
+END SCRIPT

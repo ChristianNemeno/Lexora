@@ -1,0 +1,15 @@
+%% LEXOR Increment 1 - Test 04: Declare Variables
+%% Tests variable declaration with and without initialization
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a
+DECLARE INT b = 25
+DECLARE INT c, d = 100
+DECLARE CHAR grade = 'B'
+DECLARE BOOL active = "TRUE"
+DECLARE BOOL inactive = "FALSE"
+DECLARE FLOAT rate = 1.5
+a = 10
+PRINT: "Declarations successful"
+END SCRIPT

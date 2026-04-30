@@ -8,8 +8,6 @@ namespace Lexor
 {
     class Interpreter : Expr.IVisitor<object?>, Stmt.IVisitor<object?>
     {
-        private Environment env = new Environment();
-
         private Environment environment = new Environment();
 
         public void Interpret(List<Stmt> statements)
@@ -58,8 +56,9 @@ namespace Lexor
                 if (variable.Initializer != null)
                 {
                     value = Evaluate(variable.Initializer);
+                    CheckType(variable.Name, stmt.DataType.Type, value);
                 }
-                environment.Define(variable.Name.Lexeme!, value);
+                environment.Define(variable.Name.Lexeme!, stmt.DataType.Type, value);
             }
             return null;
         }
@@ -96,6 +95,8 @@ namespace Lexor
         public object? VisitAssignExpr(Expr.Assign expr)
         {
             object? value = Evaluate(expr.Value);
+            TokenType declaredType = environment.GetType(expr.Name)!.Value;
+            CheckType(expr.Name, declaredType, value);
             environment.Assign(expr.Name, value);
             return value;
         }
@@ -153,6 +154,41 @@ namespace Lexor
         public object? VisitForStmt(Stmt.For stmt) => throw new NotImplementedException();
         public object? VisitRepeatStmt(Stmt.Repeat stmt) => throw new NotImplementedException();
         public object? VisitScanStmt(Stmt.Scan stmt) => throw new NotImplementedException();
+
+        private void CheckType(Token name, TokenType declaredType, object? value)
+        {
+            if (value == null) return;
+
+            switch (declaredType)
+            {
+                case TokenType.Int:
+                    if (value is int) return;
+                    if (value is double d && d == Math.Floor(d)) return;
+                    if (value is float f && f == Math.Floor(f)) return;
+                    throw new RuntimeError(name, $"Type mismatch: expected INT, got {TypeName(value)}.");
+                case TokenType.Float:
+                    if (value is double || value is float || value is int) return;
+                    throw new RuntimeError(name, $"Type mismatch: expected FLOAT, got {TypeName(value)}.");
+                case TokenType.Bool:
+                    if (value is bool) return;
+                    throw new RuntimeError(name, $"Type mismatch: expected BOOL, got {TypeName(value)}.");
+                case TokenType.Char:
+                    if (value is char) return;
+                    throw new RuntimeError(name, $"Type mismatch: expected CHAR, got {TypeName(value)}.");
+            }
+        }
+
+        private string TypeName(object? value)
+        {
+            if (value == null) return "NULL";
+            if (value is int) return "INT";
+            if (value is double) return "FLOAT";
+            if (value is float) return "FLOAT";
+            if (value is bool) return "BOOL";
+            if (value is char) return "CHAR";
+            if (value is string) return "STRING";
+            return value.GetType().Name;
+        }
 
         private void CheckNumberOperand(Token op, object? operand)
         {

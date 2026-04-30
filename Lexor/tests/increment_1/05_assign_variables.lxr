@@ -1,0 +1,20 @@
+%% LEXOR Increment 1 - Test 05: Assign Variables
+%% Tests assignment of data to declared variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT num
+DECLARE CHAR letter
+DECLARE BOOL flag
+DECLARE FLOAT decimal
+
+num = 42
+letter = 'Z'
+flag = "TRUE"
+decimal = 9.99
+
+PRINT: "Num: " & num
+PRINT: "Letter: " & letter
+PRINT: "Flag: " & flag
+PRINT: "Decimal: " & decimal
+END SCRIPT

@@ -1,0 +1,23 @@
+%% LEXOR Increment 1 - Test 08: Comprehensive
+%% Tests all Increment 1 features in one script
+
+SCRIPT AREA
+START SCRIPT
+%% Declare variables of different types
+DECLARE INT numOne, numTwo = 100
+DECLARE CHAR section = 'A'
+DECLARE BOOL isTesting = "TRUE"
+DECLARE FLOAT pi = 3.14
+
+%% Assign data to declared variables
+numOne = 50
+
+%% Print results using concatenation and newline characters
+PRINT: "--- Increment 1 Test Results ---" & $
+PRINT: "Number One: " & numOne & $
+PRINT: "Number Two: " & numTwo & $
+PRINT: "Section: " & section & $
+PRINT: "Testing Status: " & isTesting & $
+PRINT: "Pi Value: " & pi & $
+PRINT: "End of Increment 1 Tests"
+END SCRIPT

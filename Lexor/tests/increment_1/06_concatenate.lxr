@@ -1,0 +1,12 @@
+%% LEXOR Increment 1 - Test 06: Concatenate
+%% Tests string concatenation using & operator
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT age = 21
+DECLARE CHAR initial = 'J'
+PRINT: "Hello" & " World"
+PRINT: "Age: " & age
+PRINT: "Initial: " & initial
+PRINT: "Mixed" & " " & age & " " & initial
+END SCRIPT

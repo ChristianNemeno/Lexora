@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 04: Arithmetic Addition
+%% Tests the + operator with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 10
+DECLARE INT y = 25
+
+PRINT: 5 + 3
+PRINT: x + y
+PRINT: x + 100
+PRINT: 7 + x + y
+
+%% Expected Output:
+%% 8
+%% 35
+%% 110
+%% 42
+END SCRIPT

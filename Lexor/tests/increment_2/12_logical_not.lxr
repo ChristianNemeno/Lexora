@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 12: Logical NOT with Expressions
+%% Tests NOT combined with relational and arithmetic expressions
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 5
+DECLARE INT y = 10
+
+PRINT: NOT x > y
+PRINT: NOT x < y
+PRINT: NOT x == 5
+PRINT: NOT x <> y
+
+%% Expected Output:
+%% TRUE
+%% FALSE
+%% FALSE
+%% FALSE
+END SCRIPT

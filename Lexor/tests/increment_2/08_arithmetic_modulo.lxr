@@ -1,0 +1,19 @@
+%% LEXOR Increment 2 - Test 08: Arithmetic Modulo
+%% Tests the % operator with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 17
+DECLARE INT y = 5
+
+PRINT: 10 % 3
+PRINT: x % y
+PRINT: x % 4
+PRINT: 30 % x % y
+
+%% Expected Output:
+%% 1
+%% 2
+%% 1
+%% 1
+END SCRIPT

@@ -1,0 +1,11 @@
+%% LEXOR Increment 1 - Test 03: Reserved Words
+%% Tests that all reserved keywords are recognized correctly
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 10
+DECLARE CHAR c = 'A'
+DECLARE BOOL flag = "TRUE"
+DECLARE FLOAT f = 3.14
+PRINT: "Reserved words recognized"
+END SCRIPT
