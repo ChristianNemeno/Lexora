@@ -1,0 +1,22 @@
+%% LEXOR Increment 2 - Test 07: Arithmetic Division
+%% Tests the / operator with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT x = 20
+DECLARE INT y = 4
+
+PRINT: 100 / 5
+PRINT: x / y
+PRINT: x / 2
+PRINT: 80 / x / y
+
+%% Expected Output:
+%% 20
+%% 5
+%% 10
+%% 1
+END SCRIPT
+
+
+%%NOT SURE

@@ -1,0 +1,28 @@
+%% LEXOR Increment 2 - Test 13: Relational Operators
+%% Tests > < >= <= == <> with literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a = 7
+DECLARE INT b = 3
+DECLARE INT c = 7
+
+PRINT: a > b
+PRINT: a < b
+PRINT: a >= c
+PRINT: a <= c
+PRINT: a == c
+PRINT: a <> b
+PRINT: b == c
+PRINT: b <> c
+
+%% Expected Output:
+%% TRUE
+%% FALSE
+%% TRUE
+%% TRUE
+%% TRUE
+%% TRUE
+%% FALSE
+%% TRUE
+END SCRIPT

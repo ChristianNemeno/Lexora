@@ -1,0 +1,23 @@
+%% LEXOR Increment 2 - Test 10: Logical AND Operator
+%% Tests the AND operator with boolean literals and variables
+
+SCRIPT AREA
+START SCRIPT
+DECLARE BOOL a = "TRUE"
+DECLARE BOOL b = "FALSE"
+
+PRINT: "TRUE" AND "TRUE"
+PRINT: "TRUE" AND "FALSE"
+PRINT: "FALSE" AND "TRUE"
+PRINT: "FALSE" AND "FALSE"
+PRINT: a AND "TRUE"
+PRINT: a AND b
+
+%% Expected Output:
+%% TRUE
+%% FALSE
+%% FALSE
+%% FALSE
+%% TRUE
+%% FALSE
+END SCRIPT

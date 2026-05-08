@@ -1,0 +1,17 @@
+%% LEXOR Increment 2 - Test 16: SCAN Multiple Variables
+%% Tests reading multiple comma-separated values from user input
+%% Usage: echo "10,20" | dotnet run --project Lexor/Lexor.csproj -- tests/increment_2/16_scan_multiple.lxr
+
+SCRIPT AREA
+START SCRIPT
+DECLARE INT a
+DECLARE INT b
+SCAN: a, b
+PRINT: "Sum: " & a + b
+PRINT: "Difference: " & a - b
+
+%% Expected Input: 10,20
+%% Expected Output:
+%% Sum: 30
+%% Difference: 10
+END SCRIPT
