@@ -4,27 +4,22 @@
 
 ```bash
 dotnet build Lexor/Lexor.csproj          # build
-dotnet run --project Lexor/Lexor.csproj  # REPL (no args)
+dotnet run --project Lexor/Lexor.csproj  # REPL (double-enter to end input)
 dotnet run --project Lexor/Lexor.csproj -- path/to/script.lxr  # run file
 dotnet run --project Lexor/Lexor.csproj -- --test              # run inline tests
 ```
 
-Targets **.NET 10.0** (not 8.0 — CLAUDE.md has this wrong).
+Targets **.NET 10.0** (CLAUDE.md incorrectly says 8.0).
 
 ## Architecture
 
-Tree-walk interpreter for the **LEXOR** language, following *Crafting Interpreters*.
+Tree-walk interpreter for **LEXOR**, following *Crafting Interpreters*.
 
 ```
 Source → Lexer.cs → Parser.cs → AST (Expr.cs / Stmt.cs) → Interpreter.cs → output
 ```
 
 Driver: `Lexora.cs` (`RunFile`, `RunPrompt`). Entry point: `Program.cs`.
-
-## Known Issues
-
-- `Environment` is a single flat scope — no nested scope support yet.
-- `Lexora.cs` was previously out of sync with the pipeline (only lexing), but is now correctly wired.
 
 ## Implementation Status
 
@@ -35,7 +30,7 @@ Driver: `Lexora.cs` (`RunFile`, `RunPrompt`). Entry point: `Program.cs`.
 | Assignment (`=`) | Done | Done | Done |
 | Arithmetic / boolean expressions | Done | Done | Done |
 | `&` string concat | Done | Done | Done |
-| SCAN | Done | Done | **Stub** (`NotImplementedException`) |
+| SCAN | Done | Done | **Stub** |
 | IF / ELSE IF / ELSE | Done | **Not written** | Stub |
 | FOR | Done | **Not written** | Stub |
 | REPEAT WHEN | Done | **Not written** | Stub |
@@ -54,6 +49,7 @@ Driver: `Lexora.cs` (`RunFile`, `RunPrompt`). Entry point: `Program.cs`.
 
 Programs must be wrapped in `SCRIPT AREA / START SCRIPT … END SCRIPT`.
 Keywords are ALL-CAPS. Comments use `%%`. `$` is a newline literal in PRINT.
+`&` concatenates values. `[<char>]` is an escape code in PRINT prints.
 
 ```
 SCRIPT AREA
@@ -63,11 +59,19 @@ PRINT: "Hello " & x
 END SCRIPT
 ```
 
-Full grammar: `Lexor/Grammar.md`. Increment plan: `Lexor/LEXORIncrementChecks.md`.
+Full grammar: `Lexor/Grammar.md`. Language spec: `Lexor/specifics.md`.
+Increment plan: `Lexor/LEXORIncrementChecks.md`.
 
 ## Conventions
 
 - All numeric values are widened to `double` at runtime
 - Type keywords (`INT`, `CHAR`, `BOOL`, `FLOAT`) are enforced at runtime (strong typing)
-- Bool literals are `TRUE` / `FALSE` (uppercase in output via `Stringify`)
-- Error exit codes: 65 (lex/parse), 70 (runtime) — matching Crafting Interpreters
+- Bool output is `TRUE` / `FALSE` (uppercase via `Stringify`)
+- Error exit codes: 64 (usage), 65 (lex/parse), 70 (runtime)
+- `Environment` is a single flat `Dictionary` — no nested scope yet
+
+## Notes
+
+- No CI, linter, or formatter configuration exists
+- `tool/GenerateAst.cs` is excluded from compilation via `<Compile Remove>`
+- `.lxr` test files in `tests/` exist but are NOT part of the automated test suite — only inline tests in `Program.cs` `RunTests()` run with `--test`
